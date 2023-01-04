@@ -9,14 +9,21 @@ use Illuminate\Support\Carbon;
 
 class BrowserController extends Controller    
 {
-    //
+    // routes
     public function index(){
         // get folders and files
-        $directories = Storage::directories();
+        $directories = [];
         $files = [];
 
+        foreach(Storage::directories() as $dir){
+            array_push($directories, [
+                'name' => $this->simplifyName($dir),
+                'dir' => $dir
+            ]);
+        }
         foreach(Storage::files() as $file){
             array_push($files, [
+                'name' => $this->simplifyName($file),
                 'file' => $file,
                 'url' => Storage::url($file),
                 'size' => Storage::size($file),
@@ -27,34 +34,33 @@ class BrowserController extends Controller
         return view('browser')->with([
             'directories' => $directories,
             'files' => $files,
-            'breadcrumbs' => [
-                'home'
-            ]
+            'breadcrumbs' => []
         ]);
     }
 
-    public function openFolder($name, Request $request){
-        $breadcrumbs = json_decode($request->breadcrumbs);
-        $directory = '';
-        foreach($breadcrumbs as $i => $breadcrumb){
-            if($i == 0){
-                continue;
-            }
-            $directory = $directory.'/'.$breadcrumb;
+    /* 
+        Request params
+        path string, breadcrumbs json
+    */
+    public function openFolder(Request $request){
+        $breadcrumbs = explode('/', $request->path);
+        $directories = [];
+        foreach(Storage::directories($request->path) as $dir){
+            array_push($directories, [
+                'name' => $this->simplifyName($dir),
+                'dir' => $dir
+            ]);
         }
-        $directory = $directory.'/'.$name;
-        $directories = Storage::directories($directory);
         $files = [];
-        foreach(Storage::files($directory) as $file){
-            // return str_replace($directory, "", $file);
+        foreach(Storage::files($request->path) as $file){
             array_push($files, [
-                'file' => str_replace($directory, " ", $file),
+                'name' => $this->simplifyName($file),
+                'file' => $file,
                 'url' => $file,
                 'size' => Storage::size($file),
                 'lastModified' => Carbon::createFromTimestamp(Storage::lastModified($file))->toFormattedDateString()
             ]);
         }
-        array_push($breadcrumbs, $name);
         return view('browser')->with([
             'directories' => $directories,
             'files' => $files,
@@ -63,9 +69,36 @@ class BrowserController extends Controller
     }
 
     public function download($file){
-        // Storage::download('D://Projects/file-manager/storage/app/Bellie Joe jandusay Sept 16 - 30.xlsx', 'ok');
         return Storage::download($file);
-        // Storage::download('public/.gitignore', 'ok');
-        return $file;
+    }
+
+    /* 
+        Request params
+        breadcrumbs json
+        index int
+    */
+    public function navigateTo(Request $request){
+        $path = '';
+        foreach(json_decode($request->breadcrumbs) as $index => $breadcrumb){
+            if($index <= $request->index){
+                $path = $index == 0 ? $breadcrumb : $path.'/'.$breadcrumb;
+            }
+        }
+        return redirect()->route('browse', ['path' => $path]);
+    }
+
+    
+    // helpers
+    public static function simplifyName($name){
+        $slashIndex = 0;
+        for ($i = 0; $i < strlen($name); $i++) {
+            if($name[$i] == '/'){
+                $slashIndex = $i;
+            }
+        }
+        if($slashIndex > 0){
+            return substr($name, $slashIndex + 1);
+        }
+        return $name;
     }
 }

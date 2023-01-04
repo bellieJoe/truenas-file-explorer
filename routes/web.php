@@ -15,7 +15,8 @@ use App\Http\Controllers\BrowserController;
 
 Route::prefix('')->group(function () {
     Route::get('', [BrowserController::class, 'index']);
-    Route::get('{name}', [BrowserController::class, 'openFolder']);
+    Route::get('browse', [BrowserController::class, 'openFolder'])->name('browse');
+    Route::get('navigate', [BrowserController::class, 'navigateTo']);
     Route::get('download/{file}', [BrowserController::class, 'download']);
 });
 

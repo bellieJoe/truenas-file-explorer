@@ -10,14 +10,12 @@
         <button class="btn btn-primary btn-sm"><i class="fa-solid fa-folder-plus me-2"></i>Create Folder</button>
         <button class="btn btn-primary btn-sm"><i class="fa-solid fa-upload me-2"></i>Upload</button>
     </div>
+    
     <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
         <ol class="breadcrumb">
-            @foreach ($breadcrumbs as $breadcrumb)
-                @if ($breadcrumb == 'home')
-                    <li class="breadcrumb-item active" aria-current="page"><a href="/" class="text-decoration-none">{{ $breadcrumb }}</a></li>
-                @else
-                    <li class="breadcrumb-item active" aria-current="page"><a href="/{{ $breadcrumb }}" class="text-decoration-none">{{ $breadcrumb }}</a></li>
-                @endif
+            <li class="breadcrumb-item active" aria-current="page"><a href="/" class="text-decoration-none">Home</a></li>
+            @foreach ($breadcrumbs as $index => $breadcrumb)
+                <li class="breadcrumb-item active" aria-current="page"><a href="/navigate?index={{ $index }}&breadcrumbs={{ json_encode($breadcrumbs) }}" class="text-decoration-none">{{ $breadcrumb }}</a></li>
             @endforeach
         </ol>
     </nav>
@@ -26,18 +24,27 @@
         <tbody>
             @foreach ($directories as $directory)
             <tr style="cursor: pointer;">
-                <td><i class="fa-solid fa-folder text-secondary"></i></td>
-                <td colspan="3"><a href="/{{ $directory }}?breadcrumbs={{ json_encode($breadcrumbs) }}">{{ $directory }}</a></td>
+                <td colspan="3">
+                    <i class="fa-solid fa-folder text-secondary me-2"></i>
+                    <a class="text-decoration-none" href="/browse?path={{ $directory['dir'] }}">{{ $directory['name'] }}</a>
+                </td>
             </tr>
             @endforeach
             @foreach ($files as $file)
             <tr style="">
-                <td><i class="fa-solid fa-file text-secondary"></i></td>
-                <td><a href="/download/{{ $file['file'] }}" class="text-decoration-none">{{ $file['file'] }}</a></td>
+                <td>
+                    <i class="fa-solid fa-file text-secondary me-2"></i>
+                    <a href="/download/{{ $file['file'] }}" class="text-decoration-none">{{ $file['name'] }}</a>
+                </td>
                 <td>{{ ($file['lastModified']) }}</td>
                 <td>{{ number_format($file['size'] / 1024 , 0) }} KB</td>
             </tr>
-            @endforeach            
+            @endforeach           
+            @if (empty($directories) && empty($files))
+                <tr>
+                    <td colspan="3" class="text-center">No Files and Folders</td>
+                </tr>
+            @endif 
         </tbody>
     </table>
 </div>
