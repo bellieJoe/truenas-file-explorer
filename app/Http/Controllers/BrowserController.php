@@ -34,7 +34,8 @@ class BrowserController extends Controller
         return view('browser')->with([
             'directories' => $directories,
             'files' => $files,
-            'breadcrumbs' => []
+            'breadcrumbs' => [],
+            'path' => ''
         ]);
     }
 
@@ -64,12 +65,17 @@ class BrowserController extends Controller
         return view('browser')->with([
             'directories' => $directories,
             'files' => $files,
-            'breadcrumbs' => $breadcrumbs
+            'breadcrumbs' => $breadcrumbs,
+            'path' => $request->path
         ]);
     }
 
-    public function download($file){
-        return Storage::download($file);
+    /* 
+        Reqeuest params
+        fileDir
+    */
+    public function download(Request $request){
+        return Storage::download($request->fileDir);
     }
 
     /* 
@@ -87,7 +93,36 @@ class BrowserController extends Controller
         return redirect()->route('browse', ['path' => $path]);
     }
 
-    
+    /* 
+        Request params
+        $path string
+        $name string
+    */
+    public function makeDirectory(Request $request){
+        $request->validate([
+            'name' => 'required'
+        ]);
+        // saka na to
+        // if(in_array($request->name, Storage::directories($request->path))){
+        //     return response([
+        //         'status' => 'failed',
+        //         'message' => 'Folder '.$request->name.' already exist.'
+        //     ], 419);
+        // }
+        Storage::makeDirectory($request->path == '' ? $request->name : $request->path.'/'.$request->name);
+        return \back();
+    }
+
+    /* 
+        Request params
+        $path string
+        $name string
+    */
+    public function upload(Request $request){
+
+    }
+
+
     // helpers
     public static function simplifyName($name){
         $slashIndex = 0;

@@ -17,7 +17,9 @@ Route::prefix('')->group(function () {
     Route::get('', [BrowserController::class, 'index']);
     Route::get('browse', [BrowserController::class, 'openFolder'])->name('browse');
     Route::get('navigate', [BrowserController::class, 'navigateTo']);
-    Route::get('download/{file}', [BrowserController::class, 'download']);
+    Route::get('download', [BrowserController::class, 'download']);
+    Route::get('make-directory', [BrowserController::class, 'makeDirectory']);
+    Route::post('upload', [BrowserController::class, 'upload']);
 });
 
 
