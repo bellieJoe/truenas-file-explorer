@@ -43,7 +43,7 @@
             _token: '{{ csrf_token() }}',
             path: '{{ $path }}'
         } ,// CSRF token
-        fileType: ['mp4', 'doc', 'docx', 'xlsx'],
+        fileType: [],
         chunkSize: 1*1024*1024, // default is 1*1024*1024, this should be less than your maximum limit in php.ini
         headers: {
             'Accept' : 'application/json'

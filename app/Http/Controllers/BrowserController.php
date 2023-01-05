@@ -249,12 +249,13 @@ class BrowserController extends Controller
             $file = $fileReceived->getFile(); // get file
             $extension = $file->getClientOriginalExtension();
             $fileName = str_replace('.'.$extension, '', $file->getClientOriginalName()); //file name without extenstion
-            if(Storage::exists($request->path.'/'.$fileName.'.'.$extension)){
-                $fileName .= '.' . $extension;
-            }
-            else{
-                $fileName .= '_' . md5(time()) . '.' . $extension; // a unique file name
-            }
+            // if(Storage::exists($request->path.'/'.$fileName.'.'.$extension)){
+            //     $fileName .= '.' . $extension;
+            // }
+            // else{
+            //     $fileName .= '_' . md5(time()) . '.' . $extension; // a unique file name
+            // }
+            $fileName .= '_' . time() . '.' . $extension; // a unique file name
     
             $disk = Storage::disk(config('filesystems.default'));
             $path = $disk->putFileAs($request->path, $file, $fileName);
