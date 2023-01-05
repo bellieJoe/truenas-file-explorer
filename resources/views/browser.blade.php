@@ -1,10 +1,5 @@
 @extends('index')
 @section('content')
-<nav class="navbar">
-    <div class="container-lg">
-        <a href="/" class="navbar-brand fw-bold text-primary">File Explorer</a>
-    </div>
-</nav>
 
 <div class="container-lg py-4">
     {{-- <div class="mb-3">
@@ -33,7 +28,7 @@
             <tr style="cursor: pointer;">
                 <td colspan="3">
                     <input type="checkbox" onchange="checkDir(event)" value='{{ json_encode($directory) }}' name="" id="" class="form-check-input me-4">
-                    <i class="fa-solid fa-folder text-secondary me-2"></i>
+                    <i class="fa-solid fa-folder me-2" style="color: #ebb331"></i>
                     <a class="text-decoration-none" href="/browse?path={{ $directory['dir'] }}">{{ $directory['name'] }}</a>
                 </td>
             </tr>
@@ -42,7 +37,7 @@
             <tr style="">
                 <td>
                     <input type="checkbox" onchange="checkDir(event)" value='{{ json_encode($file) }}' name="" id="" class="form-check-input me-4">
-                    <i class="fa-solid fa-file text-secondary me-2"></i>
+                    <i class="fa-solid fa-file  me-2" style="color: #88d4f7"></i>
                     <a href="/download?fileDir={{ $file['file'] }}" class="text-decoration-none">{{ $file['name'] }}</a>
                 </td>
                 <td>{{ ($file['lastModified']) }}</td>

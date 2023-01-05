@@ -45,9 +45,9 @@ return [
 
         'ftp' => [
             'driver' => 'ftp',
-            'host' => '192.168.1.121',
+            'host' => env('FTP_HOST'),
             'username' => 'bellie',
-            'password' => 12345678,
+            'password' => '123456789',
         
             // Optional FTP Settings...
             'port' => 21,

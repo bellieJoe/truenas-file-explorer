@@ -15,6 +15,11 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     </head>
     <body>
+        <nav class="navbar">
+            <div class="container-lg">
+                <a href="/" class="navbar-brand fw-bold text-primary">File Explorer</a>
+            </div>
+        </nav>
         @yield('content')
 
         {{-- fontawesome --}}

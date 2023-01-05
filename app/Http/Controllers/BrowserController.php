@@ -16,6 +16,10 @@ class BrowserController extends Controller
     // routes
     public function index(){
         // get folders and files
+        config([
+            'filesystems.disks.ftp.username' => session()->get('username'),
+            'filesystems.disks.ftp.password' => session()->get('password')
+        ]);
         $directories = [];
         $files = [];
 
@@ -36,7 +40,7 @@ class BrowserController extends Controller
                 'lastModified' => Carbon::createFromTimestamp(Storage::lastModified($file))->toFormattedDateString()
             ]);
         }
-  
+
         return view('browser')->with([
             'directories' => $directories,
             'files' => $files,
@@ -50,6 +54,10 @@ class BrowserController extends Controller
         path string, breadcrumbs json
     */
     public function openFolder(Request $request){
+        config([
+            'filesystems.disks.ftp.username' => session()->get('username'),
+            'filesystems.disks.ftp.password' => session()->get('password')
+        ]);
         $breadcrumbs = explode('/', $request->path);
         $directories = [];
         foreach(Storage::directories($request->path) as $dir){
@@ -76,6 +84,7 @@ class BrowserController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'path' => $request->path
         ]);
+        
     }
 
     /* 
@@ -83,6 +92,10 @@ class BrowserController extends Controller
         fileDir
     */
     public function download(Request $request){
+        config([
+            'filesystems.disks.ftp.username' => session()->get('username'),
+            'filesystems.disks.ftp.password' => session()->get('password')
+        ]);
         return Storage::download($request->fileDir);
     }
 
@@ -92,6 +105,10 @@ class BrowserController extends Controller
         index int
     */
     public function navigateTo(Request $request){
+        config([
+            'filesystems.disks.ftp.username' => session()->get('username'),
+            'filesystems.disks.ftp.password' => session()->get('password')
+        ]);
         $path = '';
         foreach(json_decode($request->breadcrumbs) as $index => $breadcrumb){
             if($index <= $request->index){
@@ -107,6 +124,10 @@ class BrowserController extends Controller
         $name string
     */
     public function makeDirectory(Request $request){
+        config([
+            'filesystems.disks.ftp.username' => session()->get('username'),
+            'filesystems.disks.ftp.password' => session()->get('password')
+        ]);
         $request->validate([
             'name' => 'required'
         ]);
@@ -128,6 +149,10 @@ class BrowserController extends Controller
     */
     public function upload(Request $request)
     {
+        config([
+            'filesystems.disks.ftp.username' => session()->get('username'),
+            'filesystems.disks.ftp.password' => session()->get('password')
+        ]);
         $validation = Validator::make(
             $request->all(),
             [
@@ -151,6 +176,10 @@ class BrowserController extends Controller
     dirs array
     */
     public function deleteMany(Request $request){
+        config([
+            'filesystems.disks.ftp.username' => session()->get('username'),
+            'filesystems.disks.ftp.password' => session()->get('password')
+        ]);
         $files = [];
         // $directories = [];
         foreach($request->dirs as $dir){
@@ -162,6 +191,30 @@ class BrowserController extends Controller
             }
             Storage::delete($files);
         }
+    }
+
+    public function login(){
+        return view('login');
+    }
+
+    public function logout(){
+        session([
+            'username' => '',
+            'password' => ''
+        ]);
+        return view('login');
+    }
+
+    public function signin(Request $request){
+        $request->validate([
+            'username' => 'required',
+            'password' => 'required'
+        ]);
+        session([
+            'username' => $request->username,
+            'password' => $request->password
+        ]);
+        return \redirect('/');
     }
 
 
