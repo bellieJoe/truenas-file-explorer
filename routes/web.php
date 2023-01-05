@@ -16,7 +16,7 @@ use App\Http\Controllers\BrowserController;
 Route::prefix('')->group(function () {
     Route::get('', [BrowserController::class, 'index'])->middleware('ftp-auth');
     Route::get('login', [BrowserController::class, 'login'])->name('login');
-    Route::get('logout', [BrowserController::class, 'login'])->name('logout');
+    Route::get('logout', [BrowserController::class, 'logout'])->name('logout');
     Route::post('signin', [BrowserController::class, 'signin'])->name('signin');
     Route::get('browse', [BrowserController::class, 'openFolder'])->name('browse')->middleware('ftp-auth');
     Route::get('navigate', [BrowserController::class, 'navigateTo'])->middleware('ftp-auth');
@@ -24,6 +24,8 @@ Route::prefix('')->group(function () {
     Route::get('make-directory', [BrowserController::class, 'makeDirectory'])->middleware('ftp-auth');
     Route::post('upload', [BrowserController::class, 'upload'])->middleware('ftp-auth');
     Route::post('delete-many', [BrowserController::class, 'deleteMany'])->middleware('ftp-auth');
+    Route::post('upload-large', [BrowserController::class, 'uploadLargeFiles'])->middleware('ftp-auth');
+    Route::get('chunk-upload', [BrowserController::class, 'chunkUpload'])->middleware('ftp-auth');
 });
 
 

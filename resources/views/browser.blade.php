@@ -1,12 +1,14 @@
 @extends('index')
 @section('content')
 
+{{-- browser --}}
 <div class="container-lg py-4">
-    {{-- <div class="mb-3">
-        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#make-dir-modal"><i class="fa-solid fa-folder-plus me-2"></i>Create Folder</button>
-        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#upload-file-modal"><i class="fa-solid fa-upload me-2"></i>Upload</button>
-    </div> --}}
-    
+    <div class="btn-group btn-group-sm mb-3" style="width:fit-content">
+        <button class="btn btn-outline-dark " data-bs-toggle="modal" data-bs-target="#make-dir-modal"><i class="fa-solid fa-folder-plus me-2"></i>Create Folder</button>
+        <a href='/chunk-upload?path={{ $path }}&breadcrumbs={{ json_encode($breadcrumbs) }}' class="btn btn-outline-dark " ><i class="fa-solid fa-upload me-2"></i>Upload</a>
+        <button type="button" class="btn btn-outline-danger" id="delete-button" disabled><i class="fa-solid fa-trash me-2"></i>Delete</button>
+    </div>
+
     <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
         <ol class="breadcrumb">
             <li class="breadcrumb-item active" aria-current="page"><a href="/" class="text-decoration-none">Home</a></li>
@@ -16,20 +18,16 @@
         </ol>
     </nav>
       
-    <div class="btn-group btn-group-sm" style="width:fit-content">
-        <button class="btn btn-outline-dark " data-bs-toggle="modal" data-bs-target="#make-dir-modal"><i class="fa-solid fa-folder-plus me-2"></i>Create Folder</button>
-        <button class="btn btn-outline-dark " data-bs-toggle="modal" data-bs-target="#upload-file-modal"><i class="fa-solid fa-upload me-2"></i>Upload</button>
-        <button type="button" class="btn btn-outline-danger" id="delete-button" disabled><i class="fa-solid fa-trash me-2"></i>Delete</button>
-    </div>
-
     <table class="table">
         <tbody>
             @foreach ($directories as $directory)
             <tr style="cursor: pointer;">
                 <td colspan="3">
                     <input type="checkbox" onchange="checkDir(event)" value='{{ json_encode($directory) }}' name="" id="" class="form-check-input me-4">
-                    <i class="fa-solid fa-folder me-2" style="color: #ebb331"></i>
-                    <a class="text-decoration-none" href="/browse?path={{ $directory['dir'] }}">{{ $directory['name'] }}</a>
+                    <a class="text-decoration-none" href="/browse?path={{ $directory['dir'] }}">
+                        <i class="fa-solid fa-folder me-2" style="color: #ebb331"></i>
+                        {{ $directory['name'] }}
+                    </a>
                 </td>
             </tr>
             @endforeach
@@ -37,8 +35,10 @@
             <tr style="">
                 <td>
                     <input type="checkbox" onchange="checkDir(event)" value='{{ json_encode($file) }}' name="" id="" class="form-check-input me-4">
-                    <i class="fa-solid fa-file  me-2" style="color: #88d4f7"></i>
-                    <a href="/download?fileDir={{ $file['file'] }}" class="text-decoration-none">{{ $file['name'] }}</a>
+                    <a href="/download?fileDir={{ $file['file'] }}" class="text-decoration-none">
+                        <i class="fa-solid fa-file  me-2" style="color: #88d4f7"></i>
+                        {{ $file['name'] }}
+                    </a>
                 </td>
                 <td>{{ ($file['lastModified']) }}</td>
                 <td>{{ number_format($file['size'] / 1024 , 0) }} KB</td>

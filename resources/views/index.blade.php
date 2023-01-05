@@ -18,6 +18,13 @@
         <nav class="navbar">
             <div class="container-lg">
                 <a href="/" class="navbar-brand fw-bold text-primary">File Explorer</a>
+                <ul class="nav justify-content-end">
+                    @if(session()->has('username') && session()->has('password'))
+                    <li class="nav-item">
+                      <a href='/logout' class="nav-link "><i class="fa-solid fa-right-from-bracket me-2"></i>Logout</a>
+                    </li>
+                    @endif
+                  </ul>
             </div>
         </nav>
         @yield('content')
