@@ -20,6 +20,7 @@ Route::prefix('')->group(function () {
     Route::get('download', [BrowserController::class, 'download']);
     Route::get('make-directory', [BrowserController::class, 'makeDirectory']);
     Route::post('upload', [BrowserController::class, 'upload']);
+    Route::post('delete-many', [BrowserController::class, 'deleteMany']);
 });
 
 

@@ -22,11 +22,13 @@ class BrowserController extends Controller
         foreach(Storage::directories() as $dir){
             array_push($directories, [
                 'name' => $this->simplifyName($dir),
-                'dir' => $dir
+                'dir' => $dir,
+                'type' => 'directory'
             ]);
         }
         foreach(Storage::files() as $file){
             array_push($files, [
+                'type' => 'file',
                 'name' => $this->simplifyName($file),
                 'file' => $file,
                 'url' => Storage::url($file),
@@ -52,6 +54,7 @@ class BrowserController extends Controller
         $directories = [];
         foreach(Storage::directories($request->path) as $dir){
             array_push($directories, [
+                'type' => 'directory',
                 'name' => $this->simplifyName($dir),
                 'dir' => $dir
             ]);
@@ -59,6 +62,7 @@ class BrowserController extends Controller
         $files = [];
         foreach(Storage::files($request->path) as $file){
             array_push($files, [
+                'type' => 'file',
                 'name' => $this->simplifyName($file),
                 'file' => $file,
                 'url' => $file,
@@ -140,6 +144,24 @@ class BrowserController extends Controller
         $request->file->storeAs($request->path, $request->name);
 
         return back();
+    }
+
+    /* 
+    Req params
+    dirs array
+    */
+    public function deleteMany(Request $request){
+        $files = [];
+        // $directories = [];
+        foreach($request->dirs as $dir){
+            if($dir['type'] == 'directory'){
+                Storage::deleteDirectory($dir['dir']);
+            }
+            else {
+                array_push($files, $dir['file']);
+            }
+            Storage::delete($files);
+        }
     }
 
 
