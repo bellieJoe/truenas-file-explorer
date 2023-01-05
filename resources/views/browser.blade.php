@@ -9,7 +9,7 @@
 <div class="container-lg py-4">
     <div class="mb-3">
         <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#make-dir-modal"><i class="fa-solid fa-folder-plus me-2"></i>Create Folder</button>
-        <button class="btn btn-primary btn-sm"><i class="fa-solid fa-upload me-2"></i>Upload</button>
+        <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#upload-file-modal"><i class="fa-solid fa-upload me-2"></i>Upload</button>
     </div>
     
     <nav aria-label="breadcrumb" style="--bs-breadcrumb-divider: url(&#34;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='8' height='8'%3E%3Cpath d='M2.5 0L1 1.5 3.5 4 1 6.5 2.5 8l4-4-4-4z' fill='%236c757d'/%3E%3C/svg%3E&#34;);">
@@ -71,7 +71,67 @@
     </div>
 </div>
 
-<script>
+{{-- upload file --}}
+<div class="modal fade" id="upload-file-modal">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-body">
+                <h5>Create Folder</h5>
+                <form method="POST" action="/upload" enctype="multipart/form-data">
+                    @csrf
+                    <input type="hidden" name="path" value="{{ $path }}">
+                    <div class="mb-3">
+                        <label for="">Name</label>
+                        <input type="text" name="name" class="form-control"  id="upload-file-name" value='{{ old('name') }}'>
+                        @error('name', 'upload_form')
+                            <label for="" class="text-danger">{{ $message }}</label>
+                        @enderror
+                    </div>
+                    <div class="mb-3">
+                        <input type="file" name="file" class="form-control" id="upload-file-file" value='{{ old('file') }}' required>
+                        @error('file', 'upload_form')
+                            <label for="" class="text-danger">{{ $message }}</label>
+                        @enderror
+                    </div>
+                    <button  class=" btn btn-primary d-block mt-3 ms-auto me-0" type="submit">Upload</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
+
+<script>
+    $(function(){
+        const uploadFileModal = new bootstrap.Modal(document.getElementById('upload-file-modal'));
+        const $upload_file_file = $('#upload-file-file');
+        const $upload_file_name = $('#upload-file-name');
+
+        $upload_file_file.change(function(){
+            console.log(simplifyFileName($(this).val()))
+            $upload_file_name.val(simplifyFileName($(this).val()));
+        })
+        @if ($errors->upload_form->any())
+            uploadFileModal.show();
+        @endif
+    })
+
+    function simplifyFileName(name){
+        let slashIndex
+        for (var i = name.length - 1; i >= 0; i--) {
+            if(name[i] == '\\'){
+                slashIndex = i;
+                break;
+            }
+        }
+        return name.substring(slashIndex+1, name.length);
+        // for (var i = name.length - 1; i >= 0; i--) {
+        //     if(name[i] == '.'){
+        //         slashIndex = i;
+        //         break;
+        //     }
+        // }
+        // return name.substring(0, slashIndex);
+    }
 </script>
 @endsection

@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
 
 
 class BrowserController extends Controller    
 {
+    public $uploadable = 'pdf,doc,docx,xlsx,jpg,jpeg,png,gif';
+    public $max_upload_size = 20 * 1024 * 1024; //20GB
+
     // routes
     public function index(){
         // get folders and files
@@ -118,8 +122,24 @@ class BrowserController extends Controller
         $path string
         $name string
     */
-    public function upload(Request $request){
+    public function upload(Request $request)
+    {
+        $validation = Validator::make(
+            $request->all(),
+            [
+                'file' => 'required|file|mimes:'.$this->uploadable.'|max:'.$this->max_upload_size,
+                'name' => 'required'
+            ],
+            []
+        );
 
+        if($validation->fails()){
+            return redirect()->back()->withErrors( $validation->errors(), 'upload_form');
+        }
+
+        $request->file->storeAs($request->path, $request->name);
+
+        return back();
     }
 
 
