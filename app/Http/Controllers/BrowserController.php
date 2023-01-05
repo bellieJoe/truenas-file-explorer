@@ -35,17 +35,19 @@ class BrowserController extends Controller
                 'type' => 'directory'
             ]);
         }
+        // return 'oke';
         foreach(Storage::files() as $file){
             array_push($files, [
                 'type' => 'file',
                 'name' => $this->simplifyName($file),
                 'file' => $file,
                 'url' => Storage::url($file),
+                // 'size' => 200,
                 'size' => Storage::size($file),
                 'lastModified' => Carbon::createFromTimestamp(Storage::lastModified($file))->toFormattedDateString()
             ]);
         }
-
+        // return $files;
         return view('browser')->with([
             'directories' => $directories,
             'files' => $files,
@@ -73,12 +75,14 @@ class BrowserController extends Controller
             ]);
         }
         $files = [];
+        // return $directories;
         foreach(Storage::files($request->path) as $file){
             array_push($files, [
                 'type' => 'file',
                 'name' => $this->simplifyName($file),
                 'file' => $file,
                 'url' => $file,
+                // 'size' => 200,
                 'size' => Storage::size($file),
                 'lastModified' => Carbon::createFromTimestamp(Storage::lastModified($file))->toFormattedDateString()
             ]);
@@ -245,7 +249,12 @@ class BrowserController extends Controller
             $file = $fileReceived->getFile(); // get file
             $extension = $file->getClientOriginalExtension();
             $fileName = str_replace('.'.$extension, '', $file->getClientOriginalName()); //file name without extenstion
-            $fileName .= '.' . $extension; // a unique file name
+            if(Storage::exists($request->path.'/'.$fileName.'.'.$extension)){
+                $fileName .= '.' . $extension;
+            }
+            else{
+                $fileName .= '_' . md5(time()) . '.' . $extension; // a unique file name
+            }
     
             $disk = Storage::disk(config('filesystems.default'));
             $path = $disk->putFileAs($request->path, $file, $fileName);
