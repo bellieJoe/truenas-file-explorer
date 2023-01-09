@@ -4,7 +4,10 @@
 {{-- browser --}}
 <div class="container-lg py-4">
     <div class="btn-group btn-group-sm mb-3" style="width:fit-content">
-        <button class="btn btn-outline-dark " data-bs-toggle="modal" data-bs-target="#make-dir-modal"><i class="fa-solid fa-folder-plus me-2"></i>Create Folder</button>
+        <button class="btn btn-outline-dark " data-bs-toggle="modal" data-bs-target="#make-dir-modal">
+            {{-- <i class="fa-solid fa-folder-plus me-2"></i> --}}
+            Create Folder
+        </button>
         <a href='/chunk-upload?path={{ $path }}&breadcrumbs={{ json_encode($breadcrumbs) }}' class="btn btn-outline-dark " ><i class="fa-solid fa-upload me-2"></i>Upload</a>
         <button type="button" class="btn btn-outline-danger" id="delete-button" disabled><i class="fa-solid fa-trash me-2"></i>Delete</button>
     </div>
@@ -25,6 +28,8 @@
                 <td colspan="3">
                     <input type="checkbox" onchange="checkDir(event)" value='{{ json_encode($directory) }}' name="" id="" class="form-check-input me-4">
                     <a class="text-decoration-none" href="/browse?path={{ $directory['dir'] }}">
+                        {{-- <i class="fa-solid fa-folder me-2" style="color: #ebb331"></i> --}}
+                        <img width="20" height="20" src="{{ asset('icons/folder.svg') }}" alt="Folder">
                         <i class="fa-solid fa-folder me-2" style="color: #ebb331"></i>
                         {{ $directory['name'] }}
                     </a>
@@ -36,7 +41,8 @@
                 <td>
                     <input type="checkbox" onchange="checkDir(event)" value='{{ json_encode($file) }}' name="" id="" class="form-check-input me-4">
                     <a href="/download?fileDir={{ $file['file'] }}" class="text-decoration-none">
-                        <i class="fa-solid fa-file  me-2" style="color: #88d4f7"></i>
+                        {{-- <i class="fa-solid fa-file  me-2" style="color: #88d4f7"></i> --}}
+                        <img width="20" height="20" src="{{ asset('icons/document.svg') }}" alt="Folder">
                         {{ $file['name'] }}
                     </a>
                 </td>
