@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Carbon;
@@ -105,7 +106,23 @@ class BrowserController extends Controller
             'filesystems.disks.ftp.username' => session()->get('username'),
             'filesystems.disks.ftp.password' => session()->get('password')
         ]);
-        return Storage::download($request->fileDir);
+        if (! Storage::exists($request->fileDir)) {
+            abort(404);
+        }
+    
+        // Get the file contents
+        $file = Storage::get($request->fileDir);
+    
+        // Create a new response object
+        $response = new Response($file, 200);
+    
+        // Set the headers for the response
+        $response->header("Content-Type", "application/octet-stream");
+        $response->header("Content-Disposition", "attachment; filename=" . $request->fileDir);
+    
+        // Return the response
+        return $response;
+        // return Storage::download($request->fileDir);
     }
 
     /* 

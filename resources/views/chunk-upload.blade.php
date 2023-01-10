@@ -76,7 +76,6 @@
         response = JSON.parse(response)
         // alert("File upload finished")
         // location.href = '/browse?path=' + '{{ $path }}'
-        
     });
 
     resumable.on('complete', function(){
