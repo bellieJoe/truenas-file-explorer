@@ -60,7 +60,7 @@
 
     resumable.on('fileAdded', async function (file) { // trigger when file picked
         if(await isFileTooLarge(file)){
-            if(!confirm("File is too large. We recommend keeping file sizes under 500mb for optimal performance. \n\nDo you want to continue?")){
+            if(!confirm("File is too large. We recommend keeping file sizes under 1GB for optimal performance. \n\nDo you want to continue?")){
                 return;
             }
         }
@@ -107,7 +107,7 @@
     }
 
     async function isFileTooLarge(file){ // return boolean
-        const maxFileSize = 0.5 * 1024 * 1024 * 1024 // 1GB
+        const maxFileSize = 1 * 1024 * 1024 * 1024 // 1GB
         if(file.file.size > maxFileSize){
             return true;
         }

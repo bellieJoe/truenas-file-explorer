@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use Illuminate\Support\Facades\File;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Storage;
@@ -109,20 +111,56 @@ class BrowserController extends Controller
         if (! Storage::exists($request->fileDir)) {
             abort(404);
         }
+
+        $filename = $request->fileDir;
+        return StreamedResponse::create(function () use ($filename) {
+            $stream = Storage::readStream($filename);
     
-        // Get the file contents
-        $file = Storage::get($request->fileDir);
+            fpassthru($stream);
+        }, 200, [
+            'Content-Type' => Storage::mimeType($filename),
+            'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
+        ]);
+
     
-        // Create a new response object
-        $response = new Response($file, 200);
-    
-        // Set the headers for the response
-        $response->header("Content-Type", "application/octet-stream");
-        $response->header("Content-Disposition", "attachment; filename=" . $request->fileDir);
-    
-        // Return the response
-        return $response;
-        // return Storage::download($request->fileDir);
+        // $filePath = Storage::path($request->fileDir);
+        // return response()->streamDownload(function () use ($filePath) {
+        //     readfile($filePath);
+        // }, $this->simplifyName($request->fileDir));
+        
+        /*     
+            // Get the file path
+            $filePath = Storage::path($request->fileDir);
+
+            // Create a new response object
+            $response = new Response();
+
+            // Set the headers for the response
+            $response->headers->set("Content-Type", "application/octet-stream");
+            $response->headers->set("Content-Disposition", "attachment; filename=" . $request->fileDir);
+
+            // Open the file in read-only mode
+            $stream = fopen($filePath, "r");
+
+            // Set the chunk size to 2 MB
+            $chunkSize = 2 * 1024 * 1024;
+
+            // Loop through the chunks
+            while (! feof($stream)) {
+                // Read the chunk from the stream
+                $chunk = fread($stream, $chunkSize);
+
+                echo $chunk;
+                // Send the chunk to the browser
+                // $response->sendContent($chunk);
+            }
+
+            // Close the stream
+            fclose($stream);
+
+            // Return the response 
+        */
+        // return $response;
     }
 
     /* 
