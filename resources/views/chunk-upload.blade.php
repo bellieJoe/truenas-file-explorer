@@ -34,9 +34,9 @@
     </div>
 </div>
 {{-- resumable js --}}
-<script src="{{ asset('js/chunk-upload.js') }}"></script>
-{{-- <script src="{{ asset('resumablejs/resumable.js') }}"></script> --}}
-{{-- <script type="text/javascript">
+{{-- <script src="{{ asset('js/chunk-upload.js') }}"></script> --}}
+<script src="{{ asset('resumablejs/resumable.js') }}"></script>
+<script type="text/javascript">
     let browseFile = $('#browseFile');
     let resumable = new Resumable({
         target: '/upload-large',
@@ -99,6 +99,6 @@
         progress.hide();
     }
 
-</script> --}}
+</script>
 
 @endsection
