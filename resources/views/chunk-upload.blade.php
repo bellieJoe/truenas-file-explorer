@@ -26,13 +26,16 @@
                     </div>
                 </div>
 
-                {{-- <div class="card-footer p-4" style="display: none">
-                    <video id="videoPreview" src="" controls style="width: 100%; height: auto"></video>
-                </div> --}}
             </div>
         </div>
     </div>
+
+    <div class="modal fade">
+        {{-- .modal --}}
+    </div>
 </div>
+
+
 {{-- resumable js --}}
 {{-- <script src="{{ asset('js/chunk-upload.js') }}"></script> --}}
 <script src="{{ asset('resumablejs/resumable.js') }}"></script>
@@ -55,7 +58,12 @@
 
     resumable.assignBrowse(browseFile[0]);
 
-    resumable.on('fileAdded', function (file) { // trigger when file picked
+    resumable.on('fileAdded', async function (file) { // trigger when file picked
+        if(await isFileTooLarge(file)){
+            if(!confirm("File is too large. We recommend keeping file sizes under 500mb for optimal performance. \n\nDo you want to continue?")){
+                return;
+            }
+        }
         showProgress();
         resumable.upload() // to actually start uploading.
     });
@@ -97,6 +105,14 @@
 
     function hideProgress() {
         progress.hide();
+    }
+
+    async function isFileTooLarge(file){ // return boolean
+        const maxFileSize = 0.5 * 1024 * 1024 * 1024 // 1GB
+        if(file.file.size > maxFileSize){
+            return true;
+        }
+        return false;
     }
 
 </script>
