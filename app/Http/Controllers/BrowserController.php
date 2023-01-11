@@ -96,7 +96,7 @@ class BrowserController extends Controller
             'breadcrumbs' => $breadcrumbs,
             'path' => $request->path,
         ]);
-        
+    
     }
 
     /* 
@@ -113,7 +113,7 @@ class BrowserController extends Controller
         }
 
         $filename = $request->fileDir;
-        return redirect('http://localhost:3000/download?file=' 
+        return redirect('http://'. env('PC_HOST').':3000/download?file=' 
         . $request->fileDir . '&mimetype=' 
         . Storage::mimeType($request->fileDir) 
         . '&host=' . env('FTP_HOST')
