@@ -94,7 +94,7 @@ class BrowserController extends Controller
             'directories' => $directories,
             'files' => $files,
             'breadcrumbs' => $breadcrumbs,
-            'path' => $request->path
+            'path' => $request->path,
         ]);
         
     }
@@ -113,14 +113,20 @@ class BrowserController extends Controller
         }
 
         $filename = $request->fileDir;
-        return StreamedResponse::create(function () use ($filename) {
-            $stream = Storage::readStream($filename);
+        return redirect('http://localhost:3000/download?file=' 
+        . $request->fileDir . '&mimetype=' 
+        . Storage::mimeType($request->fileDir) 
+        . '&host=' . env('FTP_HOST')
+        . '&username=' . session()->get('username')
+        . '&password=' . session()->get('password'));
+        // return StreamedResponse::create(function () use ($filename) {
+        //     $stream = Storage::readStream($filename);
     
-            fpassthru($stream);
-        }, 200, [
-            'Content-Type' => Storage::mimeType($filename),
-            'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
-        ]);
+        //     fpassthru($stream);
+        // }, 200, [
+        //     'Content-Type' => Storage::mimeType($filename),
+        //     'Content-Disposition' => 'attachment; filename="' . basename($filename) . '"',
+        // ]);
 
     
         // $filePath = Storage::path($request->fileDir);

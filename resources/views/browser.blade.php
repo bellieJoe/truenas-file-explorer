@@ -40,6 +40,7 @@
             <tr style="">
                 <td>
                     <input type="checkbox" onchange="checkDir(event)" value='{{ json_encode($file) }}' name="" id="" class="form-check-input me-4">
+                    {{-- <a href="http://localhost:3000/download?file={{ $file['file'] }}" class="text-decoration-none"> --}}
                     <a href="/download?fileDir={{ $file['file'] }}" class="text-decoration-none">
                         {{-- <i class="fa-solid fa-file  me-2" style="color: #88d4f7"></i> --}}
                         <img width="20" height="20" src="{{ asset('icons/document.svg') }}" alt="Folder">
