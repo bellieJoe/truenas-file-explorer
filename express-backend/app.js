@@ -35,14 +35,14 @@ app.get('', (req, res, next) => {
     res.send("ko")
 })
 
-process.on('uncaughtException', function (err) {
-    console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
-    console.error(err.stack)
-});
+// process.on('uncaughtException', function (err) {
+//     console.error((new Date).toUTCString() + ' uncaughtException:', err.message)
+//     console.error(err.stack)
+// });
 
-process.on('unhandledRejection', (reason, p) => {
-    console.error((new Date).toUTCString() + ' Unhandled Rejection at: Promise', p, 'reason:', reason);
-});
+// process.on('unhandledRejection', (reason, p) => {
+//     console.error((new Date).toUTCString() + ' Unhandled Rejection at: Promise', p, 'reason:', reason);
+// });
 
 app.use(function(err, req, res, next) {
     console.error(err);
